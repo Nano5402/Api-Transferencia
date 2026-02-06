@@ -1,4 +1,3 @@
-// Ejercicio 1: Usuarios activos y sus publicaciones
 // Esta función consulta usuarios y posts, filtra los activos y cuenta sus publicaciones.
 export const usuariosActivosConPosts = async () => {
   try {
@@ -8,7 +7,7 @@ export const usuariosActivosConPosts = async () => {
     // .json() convierte la respuesta en un objeto JavaScript
     const users = await usersResponse.json();
 
-    // 2. Traer todas las publicaciones desde el endpoint /posts
+    // 2. Traer todas las publicaciones desde el etndpoint /posts
     const postsResponse = await fetch("http://localhost:3000/posts");
     const posts = await postsResponse.json();
 
