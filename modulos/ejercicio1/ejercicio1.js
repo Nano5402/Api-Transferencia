@@ -1,33 +1,36 @@
-// Esta función consulta usuarios y posts, filtra los activos y cuenta sus publicaciones.
+// Ejercicio 1: Usuarios activos y sus publicaciones
+// La idea es traer usuarios y posts, filtrar los que están activos y contar cuántos posts tiene cada uno.
+
 export const usuariosActivosConPosts = async () => {
   try {
-    // 1. Traer todos los usuarios desde el endpoint /users
-    // fetch() hace la petición HTTP al servidor
+    // 1. Pedimos todos los usuarios al servidor (endpoint /users)
+    // fetch() hace la petición HTTP y .json() convierte la respuesta en objetos JS
     const usersResponse = await fetch("http://localhost:3000/users");
-    // .json() convierte la respuesta en un objeto JavaScript
     const users = await usersResponse.json();
 
-    // 2. Traer todas las publicaciones desde el etndpoint /posts
+    // 2. Pedimos todas las publicaciones (endpoint /posts)
     const postsResponse = await fetch("http://localhost:3000/posts");
     const posts = await postsResponse.json();
 
-    // 3. Filtrar solo los usuarios que están activos (active: true)
-    // .filter() recorre el arreglo y devuelve solo los que cumplen la condición
+    // 3. Nos quedamos solo con los usuarios activos (active: true)
+    // .filter() recorre el arreglo y devuelve los que cumplen la condición
     const activeUsers = users.filter(user => user.active);
 
-    // 4. Para cada usuario activo, contar cuántos posts tiene
-    // .map() crea un nuevo arreglo transformando cada usuario en un objeto con nombre y cantidad de posts
+    // 4. Para cada usuario activo, contamos cuántos posts tiene
+    // .map() arma un nuevo arreglo con el nombre y la cantidad de posts
     const resultado = activeUsers.map(user => {
-      // .filter() busca los posts cuyo userId coincide con el id del usuario
-      const cantidadPosts = posts.filter(post => post.userId === user.id).length;
+      // Ojo: usamos Number() para evitar problemas si userId o id vienen como string
+      const cantidadPosts = posts.filter(post => Number(post.userId) === Number(user.id)).length;
+
       return {
-        name: user.name,          // nombre del usuario
-        publicaciones: cantidadPosts // cantidad de posts asociados
+        name: user.name,              // nombre del usuario
+        publicaciones: cantidadPosts  // cuántos posts tiene (puede ser 0)
       };
     });
 
-    // 5. Retornar el resultado para usarlo en app.js
+    // 5. Retornamos el resultado para mostrarlo en app.js
     return resultado;
+
   } catch (error) {
     // Si algo falla, mostramos el error en consola
     console.error("Error en ejercicio 1:", error.message);
